@@ -22,12 +22,26 @@ repositories {
 }
 
 dependencies {
+
+    // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Devtools, 디버그 모드시 클래스 변경사항 hotswap 가능
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // h2 Connector
+    runtimeOnly 'com.h2database:h2'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
