@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question List</title>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>제목</th>
+                <th>작성일시</th>
+            </tr>
+        </thead>
+
+        <!--
+            th: = 자바 코드와 연결되는 속성
+            th:each = questionList에 저장 된 데이터를 꺼낸 후 question에 저장,
+                      개수만큼 반복해서 <tr></tr> 내용 출력
+        -->
+        <tbody>
+            <tr th:each="question : ${questionList}">
+                <td th:text="${question.subject}"></td>
+                <td th:text="${question.createDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
