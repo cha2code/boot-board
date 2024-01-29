@@ -21,7 +21,13 @@
         -->
         <tbody>
             <tr th:each="question : ${questionList}">
-                <td th:text="${question.subject}"></td>
+                <!--
+                    - 제목 클릭 시 상세페이지로 이동
+                    - thymeleaf에서 문자열+자바 객체 값 사용 시 반드시 | 기호로 감싸야 함
+                -->
+                <td>
+                    <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                </td>
                 <td th:text="${question.createDate}"></td>
             </tr>
         </tbody>
