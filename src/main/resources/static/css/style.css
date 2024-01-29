@@ -1,0 +1,8 @@
+/* 답변 칸의 크기 및 버튼 상단에 마진 설정 */
+textarea {
+    width: 100%;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+}
