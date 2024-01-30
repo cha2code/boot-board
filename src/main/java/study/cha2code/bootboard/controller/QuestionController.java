@@ -1,11 +1,13 @@
 package study.cha2code.bootboard.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import study.cha2code.bootboard.dto.AnswerDTO;
+import study.cha2code.bootboard.dto.QuestionDTO;
 import study.cha2code.bootboard.entity.Question;
 import study.cha2code.bootboard.service.QuestionService;
 
@@ -36,8 +38,8 @@ public class QuestionController {
 	}
 
 	// 질문 상세 페이지
-	@GetMapping(value = "/detail/{id}")
-	public String detail(Model model, @PathVariable("id") Integer id) {
+	@GetMapping("/detail/{id}")
+	public String detail(Model model, @PathVariable("id") Integer id, AnswerDTO answerDTO) {
 
 		/*
 			요청 URL에 변수 삽입 시 @PathVariable 어노테이션 사용
@@ -50,4 +52,35 @@ public class QuestionController {
 
 		return "questionDetail";
 	}
+
+	// 글쓰기 페이지
+	@GetMapping("/create")
+	public String questionCreate(QuestionDTO questionDTO) {
+
+		return "questionForm";
+	}
+
+	// 작성한 질문 저장 및 리스트 페이지로 리다이렉트
+	@PostMapping("/create")
+	public String questionCreate(@Valid QuestionDTO questionDTO, BindingResult bindingResult) {
+
+		// validation 검증 후 에러 발생 시 실행
+		if(bindingResult.hasErrors()) {
+
+			return "questionForm";
+		}
+
+		// service를 통해 DTO가 가지고 있는 제목, 내용 데이터를 DB에 저장
+		this.service.create(questionDTO.getSubject(), questionDTO.getContent());
+
+		// 질문 저장 후 리스트로 이동
+		return "redirect:/question/list";
+	}
 }
+
+/*
+	BindingResult
+	- Validation 검증이 수행 된 결과 반환
+	- 반드시 @Valid 매개변수 뒤에 위치
+	  (위치가 맞지 않을 때 @Valid만 적용, 검증 실패 시 400 error 발생)
+ */

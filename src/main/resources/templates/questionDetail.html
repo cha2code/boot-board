@@ -38,8 +38,13 @@
             - "답변 등록" 버튼을 눌렀을 때 전송 되는 form은 th:action 속성 사용
             - 버튼 클릭 시 /answer/create/1 의 URL이 post 방식으로 호출됨
         -->
-        <form th:action="@{|/answer/create/${question.id}|}" method="post" class="my-3">
-            <textarea name="content" id="content" rows="10" class="form-control"></textarea>
+        <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerDTO}" method="post" class="my-3">
+            <!-- error 발생 시 메세지 출력 -->
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+                <div th:each="error : ${#fields.allErrors()}" th:text="${error}"/>
+            </div>
+
+            <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
             <input type="submit" value="답변 등록" class="btn btn-primary my-2">
         </form>
     </div>

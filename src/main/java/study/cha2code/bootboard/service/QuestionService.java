@@ -6,6 +6,7 @@ import study.cha2code.bootboard.entity.Question;
 import study.cha2code.bootboard.exception.DataNotFoundException;
 import study.cha2code.bootboard.repository.QuestionRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,5 +45,16 @@ public class QuestionService {
 
 			throw new DataNotFoundException("question not found");
 		}
+	}
+
+	// 질문 내용 저장
+	public void create(String subject, String content) {
+
+		Question question = new Question();
+
+		question.setSubject(subject);
+		question.setContent(content);
+		question.setCreateDate(LocalDateTime.now());
+		this.repository.save(question);
 	}
 }
