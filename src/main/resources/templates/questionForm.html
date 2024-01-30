@@ -2,17 +2,17 @@
 <html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{layout}">
+      layout:decorate="~{common/layout}">
 
     <!-- 질문 등록 form -->
     <div layout:fragment="content" class="container">
 
+        <h5 class="my-3 border-bottom pb-2">질문 등록</h5>
+
         <!-- (th:object="${questionDTO}") : <form>의 입력 항목이 QuestionDTO와 연결됨 -->
-        <form th:action="@{/question/create}" th:object="${questionDTO}" method="post">
-            <!-- 검증 에러 발생 시 에러 표시 (#fields.hasAnyErrors() == true면 에러 발생) -->
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                <div th:each="error : ${#fields.allErrors()}" th:text="${error}"></div>
-            </div>
+        <form th:action="@{question/create}" th:object="${questionDTO}" method="post">
+            <!-- th:replace에 의해 div 내용을 formErrors로 대체 -->
+            <div th:replace="~{common/formErrors :: formErrorsFragment}"></div>
 
             <!-- th:field="*{}" 사용 시 value, name, id 속성을 자동으로 생성 및 기존 입력 값 유지-->
             <div class="mb-3">
