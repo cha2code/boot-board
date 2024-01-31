@@ -2,6 +2,7 @@ package study.cha2code.bootboard.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,8 +11,6 @@ import study.cha2code.bootboard.dto.AnswerDTO;
 import study.cha2code.bootboard.dto.QuestionDTO;
 import study.cha2code.bootboard.entity.Question;
 import study.cha2code.bootboard.service.QuestionService;
-
-import java.util.List;
 
 /**
  * 질문 게시판 mapping을 위한 controller
@@ -27,12 +26,12 @@ public class QuestionController {
 
 	// 질문 게시판 페이지
 	@GetMapping("/list")
-	public String list(Model model) {
+	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
 
-		// QuestionService에서 질문 목록 데이터 가져오기
-		List<Question> questionList = this.service.getList();
+		// service에서 조회 한 페이지 가져오기 (한 페이지에 글 10개)
+		Page<Question> paging = this.service.getList(page);
 		// questionList를 model에 저장 (template에서 값을 사용하기 위함)
-		model.addAttribute("questionList", questionList);
+		model.addAttribute("paging", paging);
 
 		return "questionList";
 	}

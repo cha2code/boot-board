@@ -21,7 +21,7 @@
                           개수만큼 반복해서 <tr></tr> 내용 출력
             -->
             <tbody>
-                <tr th:each="question, loop : ${questionList}">
+                <tr th:each="question, loop : ${paging}">
                     <td th:text="${loop.count}"></td>
                     <!--
                         - 제목 클릭 시 상세페이지로 이동
@@ -36,6 +36,40 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- 페이징 처리 -->
+        <div th:if="${!paging.isEmpty()}">
+            <!-- 이전 페이지가 없을 때 비 활성화 -->
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{|?page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <!-- 현재 페이지 기준, 전후로 5페이지씩 출력 -->
+                <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                    th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                </li>
+                <!-- 다음 페이지가 없을 때 비 활성화 -->
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!--
+            th:classappend="조건식 ? 클래스_값"
+            - 조건 식이 참일 경우 '클래스_값'을 class 속성에 추가
+
+            #numbers.sequence(시작 번호, 끝 번호)
+            - 시작 번호 부터 전체 페이지 수 만큼 반복해서 생성
+        -->
 
         <!-- 질문 글쓰기 버튼 생성 -->
         <a th:href="@{/question/create}" class="btn btn-primary">글쓰기</a>
