@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -17,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		// h2-console 경로 csrf 검증 제외
 		http.csrf((csrf -> csrf
@@ -36,5 +37,12 @@ public class SecurityConfig {
 		);
 
 		return http.build();
+	}
+
+	// 단방향 암호화 처리 시 사용 되는 passwordEncoder
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+
+		return new BCryptPasswordEncoder();
 	}
 }
