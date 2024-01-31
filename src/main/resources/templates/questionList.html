@@ -31,6 +31,12 @@
                     -->
                     <td>
                         <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                        <!-- 게시글 옆 답변 개수 표시 -->
+                        <span class="text-danger small ms-2"
+                              th:if="${#lists.size(question.answerList) > 0}"
+                              th:text="${#lists.size(question.answerList)}">
+                              <!-- 답변이 있는 지 검색 후 개수 표시 -->
+                        </span>
                     </td>
 
                     <!-- 날짜 객체를 낙짜에 맞게 format하는 thymeleaf 기능 -->
