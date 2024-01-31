@@ -34,4 +34,8 @@ public class Question {
 	// 질문이 삭제 되면 답변들도 함께 삭제
 	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
 	private List<Answer> answerList;
+
+	// 작성자 (한 명이 여러 질문 작성이 가능하기 때문에 N:1 관계)
+	@ManyToOne
+	private SiteUser author;
 }

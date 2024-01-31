@@ -2,7 +2,9 @@ package study.cha2code.bootboard.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,11 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import study.cha2code.bootboard.dto.AnswerDTO;
 import study.cha2code.bootboard.dto.QuestionDTO;
 import study.cha2code.bootboard.entity.Question;
+import study.cha2code.bootboard.entity.SiteUser;
 import study.cha2code.bootboard.service.QuestionService;
+import study.cha2code.bootboard.service.UserService;
+
+import java.security.Principal;
 
 /**
  * 질문 게시판 mapping을 위한 controller
  */
+@Slf4j
 @Controller
 // final이 붙은 속성을 생성자로 객체 주입 (= QuestionService)
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class QuestionController {
 
 	// 생성자 주입
 	private final QuestionService service;
+	private final UserService userService;
 
 	// 질문 게시판 페이지
 	@GetMapping("/list")
@@ -53,6 +61,7 @@ public class QuestionController {
 	}
 
 	// 글쓰기 페이지
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
 	public String questionCreate(QuestionDTO questionDTO) {
 
@@ -60,8 +69,10 @@ public class QuestionController {
 	}
 
 	// 작성한 질문 저장 및 리스트 페이지로 리다이렉트
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
-	public String questionCreate(@Valid QuestionDTO questionDTO, BindingResult bindingResult) {
+	public String questionCreate(@Valid QuestionDTO questionDTO, BindingResult bindingResult,
+	                             Principal principal) {
 
 		// validation 검증 후 에러 발생 시 실행
 		if(bindingResult.hasErrors()) {
@@ -69,8 +80,10 @@ public class QuestionController {
 			return "questionForm";
 		}
 
-		// service를 통해 DTO가 가지고 있는 제목, 내용 데이터를 DB에 저장
-		this.service.create(questionDTO.getSubject(), questionDTO.getContent());
+		SiteUser siteUser = userService.getUser(principal.getName());
+
+		// service를 통해 DTO가 가지고 있는 제목, 내용, 작성자 데이터를 DB에 저장
+		service.create(questionDTO.getSubject(), questionDTO.getContent(), siteUser);
 
 		// 질문 저장 후 리스트로 이동
 		return "redirect:/question/list";
@@ -82,4 +95,9 @@ public class QuestionController {
 	- Validation 검증이 수행 된 결과 반환
 	- 반드시 @Valid 매개변수 뒤에 위치
 	  (위치가 맞지 않을 때 @Valid만 적용, 검증 실패 시 400 error 발생)
+
+	@PreAuthorize("isAuthenticated()")
+	- 로그인한 사용자만 호출
+	- 해당 어노테이션이 적용 된 페이지를 로그아웃 상태에서 접근 시
+	  로그인 페이지로 강제 이동
  */

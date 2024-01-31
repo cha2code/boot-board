@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.cha2code.bootboard.entity.Answer;
 import study.cha2code.bootboard.entity.Question;
+import study.cha2code.bootboard.entity.SiteUser;
 import study.cha2code.bootboard.repository.AnswerRepository;
 
 import java.time.LocalDateTime;
@@ -19,14 +20,15 @@ public class AnswerService {
 	private final AnswerRepository repository;
 
 	// 답변 생성 메소드
-	public void create(Question question, String content) {
+	public void create(Question question, String content, SiteUser author) {
 
 		Answer answer = new Answer();
 
-		// 내용, 시간, question 속성 값 저장
+		// 각 속성 값 저장
 		answer.setContent(content);
 		answer.setCreateDate(LocalDateTime.now());
 		answer.setQuestion(question);
-		this.repository.save(answer);
+		answer.setAuthor(author);
+		repository.save(answer);
 	}
 }

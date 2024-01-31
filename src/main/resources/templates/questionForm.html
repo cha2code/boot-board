@@ -10,7 +10,10 @@
         <h5 class="my-3 border-bottom pb-2">질문 등록</h5>
 
         <!-- (th:object="${questionDTO}") : <form>의 입력 항목이 QuestionDTO와 연결됨 -->
-        <form th:action="@{question/create}" th:object="${questionDTO}" method="post">
+        <form th:object="${questionDTO}" method="post">
+            <!-- csrf 설정 -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
             <!-- th:replace에 의해 div 내용을 formErrors로 대체 -->
             <div th:replace="~{common/formErrors :: formErrorsFragment}"></div>
 

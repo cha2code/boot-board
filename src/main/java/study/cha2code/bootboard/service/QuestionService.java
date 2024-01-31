@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import study.cha2code.bootboard.entity.Question;
+import study.cha2code.bootboard.entity.SiteUser;
 import study.cha2code.bootboard.exception.DataNotFoundException;
 import study.cha2code.bootboard.repository.QuestionRepository;
 
@@ -60,13 +61,14 @@ public class QuestionService {
 	}
 
 	// 질문 내용 저장
-	public void create(String subject, String content) {
+	public void create(String subject, String content, SiteUser user) {
 
 		Question question = new Question();
 
 		question.setSubject(subject);
 		question.setContent(content);
 		question.setCreateDate(LocalDateTime.now());
-		this.repository.save(question);
+		question.setAuthor(user);
+		repository.save(question);
 	}
 }

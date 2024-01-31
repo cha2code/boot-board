@@ -29,7 +29,7 @@ class BootBoardApplicationTests {
 
 			String subject = String.format("테스트 데이터 : [%03d]", i);
 			String content = "내용 없음";
-			this.service.create(subject, content);
+			this.service.create(subject, content, null);
 		}
 	}
 

@@ -2,6 +2,7 @@
 <html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{common/layout}">
 
 <div layout:fragment="content" class="container my-3">
@@ -13,6 +14,11 @@
                 <div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
                 <div class="d-flex justify-content-end">
                     <div class="badge bg-light text-dark p-2 text-start">
+                        <div class="mb-2">
+                            <!-- 작성자 표시 -->
+                            <span th:if="${question.author != null}" th:text="${question.author.username}"></span>
+                        </div>
+                        <!-- 작성 일시 -->
                         <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                     </div>
                 </div>
@@ -29,12 +35,17 @@
             <div class="card-body">
                 <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
                 <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <!-- 작성자 표시 -->
+                        <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
+                    </div>
                     <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
         </div>
 
         <!--
+            답변 작성
             - "답변 등록" 버튼을 눌렀을 때 전송 되는 form은 th:action 속성 사용
             - 버튼 클릭 시 /answer/create/1 의 URL이 post 방식으로 호출됨
         -->
@@ -44,7 +55,10 @@
                 <div th:each="error : ${#fields.allErrors()}" th:text="${error}"/>
             </div>
 
-            <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+            <!-- 로그인 하지 않은 사용자가 댓글 작성 못하게 비 활성화 -->
+            <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="10"></textarea>
+            <!-- 로그인 한 사용자는 댓글 작성 가능 -->
+            <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="10" class="form-control"></textarea>
             <input type="submit" value="답변 등록" class="btn btn-primary my-2">
         </form>
     </div>

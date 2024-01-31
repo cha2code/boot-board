@@ -24,4 +24,8 @@ public class Answer {
 	// Question entity와 연결 된 속성 (외래키, N:1 관계)
 	@ManyToOne
 	private Question question;
+
+	// 작성자 (한 명이 여러 답변 작성이 가능하기 때문에 N:1 관계)
+	@ManyToOne
+	private SiteUser author;
 }
