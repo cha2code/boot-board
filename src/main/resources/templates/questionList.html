@@ -22,10 +22,12 @@
             -->
             <tbody>
                 <tr th:each="question, loop : ${paging}">
-                    <td th:text="${loop.count}"></td>
+                    <!-- 게시물 번호 적용=전체 게시물 개수-(현재 페이지*페이지당 게시물 개수)-나열 인덱스 -->
+                    <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
                     <!--
                         - 제목 클릭 시 상세페이지로 이동
                         - thymeleaf에서 문자열+자바 객체 값 사용 시 반드시 | 기호로 감싸야 함
+                        - 나열 인덱스는 0부터 시작
                     -->
                     <td>
                         <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
